@@ -1,7 +1,7 @@
-    %% diff_eqn1.m:
+    %% diff_eqn2.m:
 
 % FUNCTION NAME:
-%   diff_eqn1
+%   diff_eqn2
 %
 % DESCRIPTION:
 %   This function defines our system of ODEs that we are integrating
@@ -67,7 +67,7 @@ S2 = pop0(12);
 R3 = pop0(13);
 B = pop0(14);
 
-% 2ND VARIANT
+% 2ND VARIANT (alpha)
 E2 = pop0(15);
 IA2 = pop0(16);
 IP2 = pop0(17);
@@ -77,7 +77,7 @@ IC2 = pop0(20);
 R4 = pop0(21);
 D2 = pop0(22);
 
-% 3RD VARIANT
+% 3RD VARIANT (delta)
 E3 = pop0(23);
 IA3 = pop0(24);
 IP3 = pop0(25);
@@ -90,7 +90,7 @@ D3 = pop0(30);
 % 3rd booster
 T = pop0(31);
 
-% 4TH VARIANT
+% 4TH VARIANT (Omicron BA.1)
 E4 = pop0(32);
 IA4 = pop0(33);
 IP4 = pop0(34);
@@ -108,7 +108,7 @@ F = pop0(42);
 % Vaccinated-Sus
 VS = pop0(43);
 
-% 5TH VARIANT
+% 5TH VARIANT (Omicron BA.2)
 E5 = pop0(44);
 IA5 = pop0(45);
 IP5 = pop0(46);
@@ -118,7 +118,7 @@ IC5 = pop0(49);
 R7 = pop0(50);
 D5 = pop0(51);
 
-% 6TH VARIANT
+% 6TH VARIANT (Omicron BA.4)
 E6 = pop0(52);
 IA6 = pop0(53);
 IP6 = pop0(54);
@@ -128,7 +128,7 @@ IC6 = pop0(57);
 R8 = pop0(58);
 D6 = pop0(59);
 
-% 5TH VARIANT
+% 5TH VARIANT (Omicron BA.5)
 E7 = pop0(60);
 IA7 = pop0(61);
 IP7 = pop0(62);
@@ -138,7 +138,7 @@ IC7 = pop0(65);
 R9 = pop0(66);
 D7 = pop0(67);
 
-% 8TH VARIANT
+% 8TH VARIANT (Hypothetical new variant)
 E8 = pop0(68);
 IA8 = pop0(69);
 IP8 = pop0(70);
@@ -180,18 +180,11 @@ waning_efficacy4 = boost_efficacy4 - waning_factor; % W
 third_boost_efficacy4 =  0.80; % T
 waning_efficacy4_2  =  0.65; % W2 45% efficacy to Omicron
 
-% vac_efficacy4 = 0.35;% V
-% boost_efficacy4 = 0.45; % B
-% waning_efficacy4 = boost_efficacy4 - waning_factor; % W
-% third_boost_efficacy4 =  0.70; % T
-% waning_efficacy4_2  =  0.45; % W2 45% efficacy to Omicron
-
 % BA.2
-ie=0.5;
-vac_efficacy5 = vac_efficacy4-ie;
-boost_efficacy5 = boost_efficacy4-ie;
-waning_efficacy5 = boost_efficacy5 - waning_factor-ie;
-third_boost_efficacy5 =  third_boost_efficacy4-ie;
+vac_efficacy5 = vac_efficacy4;
+boost_efficacy5 = boost_efficacy4;
+waning_efficacy5 = boost_efficacy5 - waning_factor;
+third_boost_efficacy5 =  third_boost_efficacy4;
 waning_efficacy5_2  =  waning_efficacy4_2; % 45% efficacy to Omicron
 
 % BA.4
@@ -208,7 +201,7 @@ waning_efficacy7 = boost_efficacy5 - waning_factor;
 third_boost_efficacy7 =  third_boost_efficacy4;
 waning_efficacy7_2  =  waning_efficacy4_2; % 45% efficacy to Omicron
 
-% BA.5
+% Hypothetical new variant
 vac_efficacy8 = vac_efficacy4;
 boost_efficacy8 = boost_efficacy4;
 waning_efficacy8 = boost_efficacy5 - waning_factor;
@@ -216,24 +209,8 @@ third_boost_efficacy8 =  third_boost_efficacy4;
 waning_efficacy8_2  =  waning_efficacy4_2; % 45% efficacy to Omicron
 
 waning_rate2  =  1/(10*7); % 10 week waning period
-%waning_rate2 = 0;
 IExtra = 0;
 
-%% Make intervention modifications
-% if after quarantine start, switch
-if t > quarantine_start
-    q = P(19) * c2switch(t - quarantine_start, 4, false);
-    %q = 0;
-end
-
-%lambda = alpha/mr(floor(t));
-
-% if S2 ~= 0
-%     alpha = alpha*2;
-%     lambda = lambda*2;
-% end
-%
-beta4orig = mean([beta beta2 beta3 beta4]);
 if t < 288 
     beta2 = 0;
     E2 = 0;
@@ -259,14 +236,12 @@ if t > 757
     beta4 = 0;
     E4 = 0;
 end
-if t < 745
+if t < 686
     beta5 = 0;
     E5 = 0;
-% elseif t > 872
-%     beta5 = 0;
-%     E5 = 0;
-else
-    beta5 = 1.25; % BA1 = 2.7 at peak, 2.0 avg
+elseif t > 872
+    beta5 = 0;
+    E5 = 0;
 end
 if t < 760
     beta6 = 0;
@@ -276,10 +251,11 @@ if t < 781
     beta7 = 0;
     E7 = 0;
 end
-
+beta5 = 0; E5 = 0;
 beta6 = 0; E6 = 0;% BA.4
 beta7 = 0; E7 = 0;% BA.5
 beta8 = 0; E8 = 0;% 
+
 % if t < 603 % 634: Dec 1, 603: Nov 1, 2x, 1.5x
 %     beta4 = 0; E4 = 0;
 %     beta5 = 0; E5 = 0;
@@ -297,34 +273,17 @@ beta8 = 0; E8 = 0;%
 
 
 
-% waning_rate_r = 0.0042;
-% waning_rate_v = 0.0042;
 waning_rate_r = 1/(365*waning_period);
 waning_rate_v = 1/(5*30);
 
 % 
-%waning_rate_r = 5.4795e-04; % 1 / 5yr
-%waning_rate_v = 0.0011; % 1 / 2.5yr
 third_boost_rate = 0;
 if t > 579 % Oct 1st, USA
     third_boost_rate = 1/30; % 6months total, 5 months waning, 1 month to T
 end
-%waning_rate_r = 0;
-%waning_rate_v = 0;
 fourth_boost_rate = 0;
 alpha = 0;
 lambda = 0;
-%beta2=0;
-%beta3=0;
-%beta4 = 0;
-%E4 = 0;
-% if t < 640
-%     beta4 = 0;
-%     E4 = 0;
-% else
-%     beta4 = beta4s*beta3;
-% end
-%d = 1;
 
 
 %% Define differential equations for each compartment

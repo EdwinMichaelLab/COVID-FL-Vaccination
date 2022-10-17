@@ -110,7 +110,6 @@ vac_refusal = 0.09; % 50% antivax
 
 mr = zeros(1,1);
 %% Linear interpolation between days
-%mr = griddedInterpolant(1:length(movement_ratio_data), movement_ratio_data);
 
 % number of prior parameter sets to sample, default 50000
 nDraws = 20000;
